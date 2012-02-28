@@ -343,7 +343,7 @@ static NSString *SFHFKeychainUtilsErrorDomain = @"SFHFKeychainUtilsErrorDomain";
 	// Check if there's a shared keychain access group name provided and set it appropriately.
 	if (accessGroupName)
 	{
-		NSLog(@"Adding access group.");
+//		NSLog(@"Adding access group.");
 		[attributeQuery setObject: (id)accessGroupName forKey: (id)kSecAttrAccessGroup];
 	}
 
@@ -504,12 +504,14 @@ static NSString *SFHFKeychainUtilsErrorDomain = @"SFHFKeychainUtilsErrorDomain";
 			// Check if there's a shared keychain access group name provided and set it appropriately.
 			if (accessGroupName)
 			{
-				NSLog(@"Adding access group.");
+//				NSLog(@"Adding access group.");
 				
 				[mutableQuery setObject:(id)accessGroupName forKey:(id)kSecAttrAccessGroup];
 			}
 			
 			status = SecItemUpdate((CFDictionaryRef)mutableQuery, (CFDictionaryRef)[NSDictionary dictionaryWithObject: [password dataUsingEncoding: NSUTF8StringEncoding] forKey: (NSString *)kSecValueData]);
+            
+            [mutableQuery release];
 		}
 	}
 	else 
@@ -537,11 +539,13 @@ static NSString *SFHFKeychainUtilsErrorDomain = @"SFHFKeychainUtilsErrorDomain";
 		// Check if there's a shared keychain access group name provided and set it appropriately.
 		if (accessGroupName)
 		{
-			NSLog(@"getPasswordForUsername: adding access group.");
+//			NSLog(@"getPasswordForUsername: adding access group.");
 			[mutableQuery setObject:accessGroupName forKey:(id)kSecAttrAccessGroup];
 		}
 
 		status = SecItemAdd((CFDictionaryRef) mutableQuery, NULL);
+        
+        [mutableQuery release];
 	}
 	
 	if (error != nil && status != noErr) 
@@ -589,6 +593,8 @@ static NSString *SFHFKeychainUtilsErrorDomain = @"SFHFKeychainUtilsErrorDomain";
 	
 	OSStatus status = SecItemDelete((CFDictionaryRef) mutableQuery);
 	
+    [mutableQuery release];
+    
 	if (error != nil && status != noErr) 
 	{
 		*error = [NSError errorWithDomain: SFHFKeychainUtilsErrorDomain code: status userInfo: nil];		
